@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class ConnectionHandler {
     private Client client;
     private Gson gson = new Gson();
+    private boolean sentWelcomeData = false;
 
     public ConnectionHandler() {
         new Thread(runnable).start();
@@ -22,7 +23,7 @@ public class ConnectionHandler {
     private Set<String> toSend = new CopyOnWriteArraySet<>();
     private Set<SocketResponse> socketResponses = new HashSet<>();
     public void addMessage(String message) {
-        if (client == null) {
+        if (client == null || !client.isOpen()) {
             toSend.add(message);
             return;
         }
@@ -40,7 +41,6 @@ public class ConnectionHandler {
         try {
             client = new Client(new URI("wss://ws.chrommob.fun"), this);
             client.connect();
-            client.send(gson.toJson(new WelcomeData()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,6 +56,7 @@ public class ConnectionHandler {
 
 class Client extends WebSocketClient {
     ConnectionHandler connectionHandler;
+    Gson gson = new Gson();
 
     public Client(URI serverURI, ConnectionHandler connectionHandler) {
         super(serverURI);
@@ -65,6 +66,7 @@ class Client extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         MineStoreCommon.getInstance().log("You are connected to secure websocket server: " + getURI());
+        send(gson.toJson(new WelcomeData()));
         // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 
