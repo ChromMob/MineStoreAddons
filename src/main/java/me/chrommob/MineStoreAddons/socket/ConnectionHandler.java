@@ -1,5 +1,7 @@
 package me.chrommob.MineStoreAddons.socket;
 
+import com.google.gson.Gson;
+import me.chrommob.MineStoreAddons.socket.data.WelcomeData;
 import me.chrommob.minestore.common.MineStoreCommon;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -11,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ConnectionHandler {
     private Client client;
+    private Gson gson = new Gson();
 
     public ConnectionHandler() {
         new Thread(runnable).start();
@@ -37,6 +40,7 @@ public class ConnectionHandler {
         try {
             client = new Client(new URI("wss://ws.chrommob.fun"), this);
             client.connect();
+            client.send(gson.toJson(new WelcomeData()));
         } catch (Exception e) {
             e.printStackTrace();
         }
