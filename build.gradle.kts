@@ -15,7 +15,6 @@ dependencies {
     compileOnly("me.chrommob:MineStore:0.1")
     compileOnly("net.kyori:adventure-api:4.12.0")
     implementation("com.google.code.gson:gson:2.8.6")
-    implementation("org.java-websocket:Java-WebSocket:1.5.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
