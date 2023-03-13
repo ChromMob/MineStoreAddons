@@ -9,10 +9,11 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("me.chrommob:MineStore:0.1")
+    compileOnly("com.github.chrommob:MineStoreRecode:master-SNAPSHOT")
     compileOnly("net.kyori:adventure-api:4.12.0")
     compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
     implementation("org.yaml:snakeyaml:2.0")
