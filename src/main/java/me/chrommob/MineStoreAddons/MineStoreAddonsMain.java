@@ -44,7 +44,10 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     }
 
     private void registerListeners() {
-        common.registerListener(new Announcer(this));
+        Map<String, Object> announcer = (Map<String, Object>) config.get("purchase-announcer");
+        if ((boolean) announcer.get("enabled")) {
+            common.registerListener(new Announcer(this));
+        }
     }
 
     @Override

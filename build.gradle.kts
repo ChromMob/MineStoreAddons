@@ -22,6 +22,10 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
+tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    relocate("net.kyori", "me.chrommob.minestore.libs.net.kyori")
+}
+
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
