@@ -7,11 +7,18 @@ import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.addons.MineStoreListener;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
+import net.kyori.adventure.text.Component;
+
+import java.util.Map;
 
 public class Announcer extends MineStoreListener implements SocketResponse {
     private final ConnectionHandler connectionHandler;
     private final Gson gs = new Gson();
+    private String message;
     public Announcer(MineStoreAddonsMain main) {
+        //Get file as input stream
+        Map<String, Object> announcer = (Map<String, Object>) main.getConfig().get("purchase-announcer");
+        this.message = (String) announcer.get("format");
         main.registerSocketResponse(this);
         this.connectionHandler = main.getConnectionHandler();
     }
@@ -31,7 +38,10 @@ public class Announcer extends MineStoreListener implements SocketResponse {
             return;
         }
         MineStoreCommon.getInstance().userGetter().getAllPlayers().forEach(player -> {
-            player.sendMessage(socketResponse.getName() + " just purchased " + socketResponse.getPackageName() + " for " + socketResponse.getAmount() + "!");
+            String amount = String.valueOf(socketResponse.getAmount());
+            message = message.replace("%player%", socketResponse.getName()).replace("%package%", socketResponse.getPackageName()).replace("%price%", amount);
+            Component component = MineStoreCommon.getInstance().miniMessage().deserialize(message);
+            player.sendMessage(component);
         });
     }
 }

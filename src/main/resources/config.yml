@@ -1,0 +1,3 @@
+purchase-announcer:
+  enabled: true
+  format: "<red><bold>%player%</bold></red> bought <bold>%package%</bold> for <gold>%price%"

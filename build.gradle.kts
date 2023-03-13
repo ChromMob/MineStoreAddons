@@ -14,6 +14,8 @@ repositories {
 dependencies {
     compileOnly("me.chrommob:MineStore:0.1")
     compileOnly("net.kyori:adventure-api:4.12.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
+    implementation("org.yaml:snakeyaml:2.0")
     implementation("com.google.code.gson:gson:2.8.6")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
