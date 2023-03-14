@@ -43,9 +43,11 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         registerListeners();
     }
 
+    private boolean announcePurchases = false;
     private void registerListeners() {
         Map<String, Object> announcer = (Map<String, Object>) config.get("purchase-announcer");
         if ((boolean) announcer.get("enabled")) {
+            announcePurchases = true;
             common.registerListener(new Announcer(this));
         }
     }
@@ -57,7 +59,9 @@ public class MineStoreAddonsMain extends MineStoreAddon {
 
     @Override
     public void onReload() {
-        // Plugin reload logic
+        if (!announcePurchases && (boolean) ((Map<String, Object>) config.get("purchase-announcer")).get("enabled")) {
+            common.registerListener(new Announcer(this));
+        }
     }
 
     public MineStoreCommon getCommon() {

@@ -23,6 +23,14 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
+var targetJavaVersion = 8
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    var javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion.toString()
+    targetCompatibility = javaVersion.toString()
+}
+
 tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     relocate("net.kyori", "me.chrommob.minestore.libs.net.kyori")
 }
