@@ -39,7 +39,8 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        connectionHandler = new ConnectionHandler();
+        connectionHandler = new ConnectionHandler("ws://ws.chrommob.fun:8080", this);
+        connectionHandler.connect();
         registerListeners();
     }
 

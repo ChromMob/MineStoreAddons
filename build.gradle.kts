@@ -18,6 +18,7 @@ dependencies {
     compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
     implementation("org.yaml:snakeyaml:2.0")
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("org.java-websocket:Java-WebSocket:1.5.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")

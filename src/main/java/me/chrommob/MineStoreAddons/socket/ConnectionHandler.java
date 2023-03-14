@@ -1,66 +1,68 @@
 package me.chrommob.MineStoreAddons.socket;
 
 import com.google.gson.Gson;
+import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.socket.data.WelcomeData;
+import me.chrommob.minestore.common.MineStoreCommon;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
-import javax.net.ssl.SSLSocketFactory;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 
-public class ConnectionHandler {
+public class ConnectionHandler extends WebSocketClient {
+    private MineStoreAddonsMain main;
     private Gson gson = new Gson();
-    private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public ConnectionHandler() {
-        new Thread(runnable).start();
-    }
-
-    private Set<String> toSend = new CopyOnWriteArraySet<>();
     private Set<SocketResponse> socketResponses = new HashSet<>();
-    public void addMessage(String message) {
-        toSend.add(message);
-    }
-    public void removeMessage(String message) {
-        toSend.remove(message);
+
+    public ConnectionHandler(String serverUri, MineStoreAddonsMain main) {
+        super(URI.create(serverUri));
+        this.main = main;
     }
 
-    private Runnable runnable = () -> {
-        try {
-            socket = new Socket("ws.chrommob.fun", 8080);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    @Override
+    public void onOpen(ServerHandshake handshakedata) {
+        MineStoreCommon.getInstance().log("Connected to websocket");
+        send(gson.toJson(new WelcomeData()));
+    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public void onMessage(String message) {
+        for (SocketResponse socketResponse : socketResponses) {
+            socketResponse.onResponse(message);
         }
-        try {
+    }
 
-            out.println(gson.toJson(new WelcomeData()));
-            while (true) {
-                for (String message : toSend) {
-                    out.println(message);
-                    removeMessage(message);
-                }
-                while (in.ready()) {
-                    String message = in.readLine();
-                    for (SocketResponse socketResponse : socketResponses) {
-                        socketResponse.onResponse(message);
-                    }
-                }
-                Thread.sleep(1000);
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        MineStoreCommon.getInstance().log("Disconnected from websocket");
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                connect();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    };
+        }).start();
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        MineStoreCommon.getInstance().log("Error in websocket");
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                connect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void addMessage(String message) {
+        send(message);
+    }
 
     public void registerSocketResponse(SocketResponse socketResponse) {
         socketResponses.add(socketResponse);
