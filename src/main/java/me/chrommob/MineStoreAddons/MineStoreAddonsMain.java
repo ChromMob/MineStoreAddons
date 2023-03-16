@@ -1,6 +1,6 @@
 package me.chrommob.MineStoreAddons;
 
-import me.chrommob.MineStoreAddons.features.Announcer;
+import me.chrommob.MineStoreAddons.features.announcer.Announcer;
 import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;

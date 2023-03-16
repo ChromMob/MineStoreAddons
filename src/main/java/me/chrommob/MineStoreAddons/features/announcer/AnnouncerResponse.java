@@ -1,6 +1,6 @@
-package me.chrommob.MineStoreAddons.features;
+package me.chrommob.MineStoreAddons.features.announcer;
 
-public class Response {
+public class AnnouncerResponse {
     private String name;
     private double amount;
     private String packageName;

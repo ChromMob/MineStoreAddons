@@ -1,4 +1,4 @@
-package me.chrommob.MineStoreAddons.features;
+package me.chrommob.MineStoreAddons.features.announcer;
 
 import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
@@ -35,13 +35,13 @@ public class Announcer extends MineStoreListener implements SocketResponse {
         if (!split[0].equalsIgnoreCase("announcer")) {
             return;
         }
-        Response socketResponse = gs.fromJson(split[1], Response.class);
-        if (socketResponse == null) {
+        AnnouncerResponse socketAnnouncerResponse = gs.fromJson(split[1], AnnouncerResponse.class);
+        if (socketAnnouncerResponse == null) {
             return;
         }
         MineStoreCommon.getInstance().userGetter().getAllPlayers().forEach(player -> {
-            String amount = String.valueOf(socketResponse.getAmount());
-            message = message.replace("%player%", socketResponse.getName()).replace("%package%", socketResponse.getPackageName()).replace("%price%", amount);
+            String amount = String.valueOf(socketAnnouncerResponse.getAmount());
+            message = message.replace("%player%", socketAnnouncerResponse.getName()).replace("%package%", socketAnnouncerResponse.getPackageName()).replace("%price%", amount);
             Component component = mm.deserialize(message);
             player.sendMessage(component);
         });
