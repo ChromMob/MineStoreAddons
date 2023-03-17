@@ -13,7 +13,7 @@ public class UserInfo implements SocketResponse {
     }
 
     private void init() {
-        main.getCommon().command().registerCommand(new Command(this));
+        main.getCommon().commandManager().registerCommand(new Command(this));
     }
 
     public void sendRequest(String sender, String username) {
