@@ -3,3 +3,4 @@ purchase-announcer:
   format: "<red><bold>%player%</bold></red> bought <bold>%package%</bold> for <gold>%price%"
 user-info:
   enabled: true
+  not-found: "<red>%player% did not buy any packages yet."
