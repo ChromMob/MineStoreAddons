@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public class InfoResponse {
     public InfoResponse(String sender, String username, double amount, HashMap<String, Integer> packageAmount, HashMap<String, Double> packagePrice) {
+        this.sender = sender;
+        this.username = username;
         this.amount = amount;
         this.packageAmount = packageAmount;
         this.packagePrice = packagePrice;

@@ -3,6 +3,7 @@ package me.chrommob.MineStoreAddons.features.userInfo;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
 import me.chrommob.minestore.common.interfaces.user.AbstractUser;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
 
@@ -12,15 +13,18 @@ public class Command extends BaseCommand {
     public Command(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
+
+    @Default
     @CommandPermission("minestoreaddons.userinfo.self")
     public void onSelf(AbstractUser user) {
         CommonUser commonUser = user.user();
-        commonUser.sendMessage("Your username is " + commonUser.getName());
+        userInfo.sendRequest(commonUser.getName(), commonUser.getName());
     }
 
+    @Default
     @CommandPermission("minestoreaddons.userinfo.other")
     public void onOther(AbstractUser user, String username) {
         CommonUser commonUser = user.user();
-        commonUser.sendMessage(username + "'s username is " + username);
+        userInfo.sendRequest(commonUser.getName(), username);
     }
 }
