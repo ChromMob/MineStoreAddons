@@ -21,7 +21,6 @@ public class Announcer extends MineStoreListener implements SocketResponse {
         //Get file as input stream
         Map<String, Object> announcer = (Map<String, Object>) main.getConfig().get("purchase-announcer");
         this.message = (String) announcer.get("format");
-        main.registerSocketResponse(this);
         this.connectionHandler = main.getConnectionHandler();
     }
     @Override

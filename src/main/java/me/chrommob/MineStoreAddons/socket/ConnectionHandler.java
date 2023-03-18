@@ -15,7 +15,6 @@ public class ConnectionHandler extends WebSocketClient {
     private MineStoreAddonsMain main;
     private Gson gson = new Gson();
     private Set<SocketResponse> socketResponses = new HashSet<>();
-    private Set<String> messages = new HashSet<>();
 
     public ConnectionHandler(String serverUri, MineStoreAddonsMain main) {
         super(URI.create(serverUri));
@@ -24,19 +23,21 @@ public class ConnectionHandler extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
+        main.reconnected();
         MineStoreCommon.getInstance().log("Connected to websocket");
         send(gson.toJson(new WelcomeData()));
+        if (main.messages.size() > 0) {
+            main.messages.forEach(this::send);
+            main.messages.clear();
+        }
     }
 
     @Override
     public void send(String text) {
         if (isClosed()) {
-            messages.add(text);
+            main.messages.add(text);
+            main.connectToWebsocket();
             return;
-        }
-        if (messages.size() > 0) {
-            messages.forEach(this::send);
-            messages.clear();
         }
         super.send(text);
     }
@@ -51,14 +52,6 @@ public class ConnectionHandler extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         MineStoreCommon.getInstance().log("Disconnected from websocket");
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            main.connectToWebsocket();
-        }).start();
     }
 
     @Override

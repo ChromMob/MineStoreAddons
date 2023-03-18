@@ -27,7 +27,6 @@ public class UserInfo implements SocketResponse {
         Map<String, Object> gui = (Map<String, Object>) userInfo.get("gui");
         guiName = (String) gui.get("title");
         item = (String) gui.get("item");
-        main.registerSocketResponse(this);
         main.getCommon().commandManager().registerCommand(new Command(this));
     }
 

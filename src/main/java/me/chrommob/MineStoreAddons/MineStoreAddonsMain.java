@@ -13,8 +13,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class MineStoreAddonsMain extends MineStoreAddon {
@@ -23,6 +25,8 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     private File configFile;
     private LinkedHashMap<String, Object> config;
     private Yaml yaml = new Yaml();
+    private Announcer announcer;
+    private UserInfo userInfo;
     @Override
     public void onEnable() {
         common = MineStoreCommon.getInstance();
@@ -40,29 +44,42 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        connectToWebsocket();
         registerListeners();
+        connectToWebsocket();
     }
 
+    private boolean reconnecting = false;
     public void connectToWebsocket() {
-        if (connectionHandler == null || !connectionHandler.getSocket().isConnected()) {
-            connectionHandler = new ConnectionHandler("ws://ws.chrommob.fun:8080", this);
-            connectionHandler.connect();
+        if (reconnecting) return;
+        connectionHandler = new ConnectionHandler("ws://ws.chrommob.fun:8080", this);
+        connectionHandler.connect();
+        registerSocketResponses();
+    }
+    public void reconnected() {
+        reconnecting = false;
+    }
+    public Set<String> messages = new HashSet<>();
+
+    private void registerSocketResponses() {
+        Map<String, Object> announcer = (Map<String, Object>) config.get("purchase-announcer");
+        if ((boolean) announcer.get("enabled")) {
+            connectionHandler.registerSocketResponse(this.announcer);
+        }
+        Map<String, Object> userInfo = (Map<String, Object>) config.get("user-info");
+        if ((boolean) userInfo.get("enabled")) {
+            connectionHandler.registerSocketResponse(this.userInfo);
         }
     }
 
-    private boolean announcePurchases = false;
-    private boolean userInfo = false;
     private void registerListeners() {
         Map<String, Object> announcer = (Map<String, Object>) config.get("purchase-announcer");
         if ((boolean) announcer.get("enabled")) {
-            announcePurchases = true;
+            this.announcer = new Announcer(this);
             common.registerListener(new Announcer(this));
         }
         Map<String, Object> userInfo = (Map<String, Object>) config.get("user-info");
         if ((boolean) userInfo.get("enabled")) {
-            this.userInfo = true;
-            new UserInfo(this);
+            this.userInfo = new UserInfo(this);
         }
     }
 
@@ -73,10 +90,10 @@ public class MineStoreAddonsMain extends MineStoreAddon {
 
     @Override
     public void onReload() {
-        if (!announcePurchases && (boolean) ((Map<String, Object>) config.get("purchase-announcer")).get("enabled")) {
+        if (announcer == null && (boolean) ((Map<String, Object>) config.get("purchase-announcer")).get("enabled")) {
             common.registerListener(new Announcer(this));
         }
-        if (!userInfo && (boolean) ((Map<String, Object>) config.get("user-info")).get("enabled")) {
+        if (userInfo == null && (boolean) ((Map<String, Object>) config.get("user-info")).get("enabled")) {
             new UserInfo(this);
         }
     }
@@ -87,10 +104,6 @@ public class MineStoreAddonsMain extends MineStoreAddon {
 
     public ConnectionHandler getConnectionHandler() {
         return connectionHandler;
-    }
-
-    public void registerSocketResponse(SocketResponse socketResponse) {
-        connectionHandler.registerSocketResponse(socketResponse);
     }
 
     public Map<String, Object> getConfig() {
