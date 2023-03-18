@@ -1,16 +1,15 @@
 package me.chrommob.MineStoreAddons;
 
 import me.chrommob.MineStoreAddons.features.announcer.Announcer;
+import me.chrommob.MineStoreAddons.features.economy.CustomEconomy;
 import me.chrommob.MineStoreAddons.features.userInfo.UserInfo;
 import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
-import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.addons.MineStoreAddon;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -22,8 +21,10 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     private Yaml yaml;
     private Announcer announcer;
     private UserInfo userInfo;
+    private CustomEconomy customEconomy;
+
     @Override
-    public void onEnable() {
+    public void onLoad() {
         common = MineStoreCommon.getInstance();
         configFile = new File(MineStoreCommon.getInstance().configFile().getParentFile() + File.separator + "addons" + File.separator + "MineStoreAddons" + File.separator + "config.yml");
         DumperOptions options = new DumperOptions();
@@ -45,6 +46,18 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+//        Map<String, Object> economyConfig = (Map<String, Object>) config.get("economy");
+//        if ((boolean) economyConfig.get("enabled")) {
+//            customEconomy = new CustomEconomy();
+//            common.registerPlayerEconomyProvider(customEconomy);
+//        }
+    }
+
+    @Override
+    public void onEnable() {
+        if (customEconomy != null) {
+            customEconomy.onEnable();
+        }
         registerListeners();
         connectToWebsocket();
     }
@@ -61,6 +74,9 @@ public class MineStoreAddonsMain extends MineStoreAddon {
                 put("title", "<gold>%player%'s packages");
                 put("item", "PAPER");
             }});
+        }});
+        config.put("economy", new LinkedHashMap<String, Object>() {{
+            put("enabled", true);
         }});
     }
 
