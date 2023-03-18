@@ -101,7 +101,9 @@ public class MineStoreAddonsMain extends MineStoreAddon {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        if (connectionHandler != null) {
+            connectionHandler.close();
+        }
     }
 
     @Override
