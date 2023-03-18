@@ -10,12 +10,18 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://jitpack.io")
+    maven ("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
     compileOnly("com.github.chrommob:MineStoreRecode:master-SNAPSHOT")
     compileOnly("net.kyori:adventure-api:4.12.0")
     compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
+    compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+    compileOnly("co.aikar:acf-bungee:0.5.1-SNAPSHOT")
+    compileOnly("co.aikar:acf-velocity:0.5.1-SNAPSHOT")
+    compileOnly("co.aikar:acf-sponge:0.5.1-SNAPSHOT")
+
     implementation("org.yaml:snakeyaml:2.0")
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
@@ -34,6 +40,7 @@ tasks.withType<JavaCompile> {
 
 tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     relocate("net.kyori", "me.chrommob.minestore.libs.net.kyori")
+    relocate("co.aikar.acf", "me.chrommob.minestore.libs.co.aikar.acf")
 }
 
 tasks.getByName<Test>("test") {

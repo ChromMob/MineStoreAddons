@@ -40,24 +40,16 @@ public class ConnectionHandler extends WebSocketClient {
         new Thread(() -> {
             try {
                 Thread.sleep(5000);
-                connect();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            main.connectToWebsocket();
         }).start();
     }
 
     @Override
     public void onError(Exception ex) {
-        MineStoreCommon.getInstance().log("Error in websocket");
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-                connect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+        ex.printStackTrace();
     }
 
     public void addMessage(String message) {

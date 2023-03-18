@@ -1,6 +1,7 @@
 package me.chrommob.MineStoreAddons;
 
-import me.chrommob.MineStoreAddons.features.Announcer;
+import me.chrommob.MineStoreAddons.features.announcer.Announcer;
+import me.chrommob.MineStoreAddons.features.userInfo.UserInfo;
 import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
@@ -39,17 +40,29 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        connectionHandler = new ConnectionHandler("ws://ws.chrommob.fun:8080", this);
-        connectionHandler.connect();
+        connectToWebsocket();
         registerListeners();
     }
 
+    public void connectToWebsocket() {
+        if (connectionHandler == null || !connectionHandler.getSocket().isConnected()) {
+            connectionHandler = new ConnectionHandler("ws://ws.chrommob.fun:8080", this);
+            connectionHandler.connect();
+        }
+    }
+
     private boolean announcePurchases = false;
+    private boolean userInfo = false;
     private void registerListeners() {
         Map<String, Object> announcer = (Map<String, Object>) config.get("purchase-announcer");
         if ((boolean) announcer.get("enabled")) {
             announcePurchases = true;
             common.registerListener(new Announcer(this));
+        }
+        Map<String, Object> userInfo = (Map<String, Object>) config.get("user-info");
+        if ((boolean) userInfo.get("enabled")) {
+            this.userInfo = true;
+            new UserInfo(this);
         }
     }
 
@@ -62,6 +75,9 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     public void onReload() {
         if (!announcePurchases && (boolean) ((Map<String, Object>) config.get("purchase-announcer")).get("enabled")) {
             common.registerListener(new Announcer(this));
+        }
+        if (!userInfo && (boolean) ((Map<String, Object>) config.get("user-info")).get("enabled")) {
+            new UserInfo(this);
         }
     }
 
