@@ -8,9 +8,7 @@ import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import net.kyori.adventure.text.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserInfo implements SocketResponse {
     private final MineStoreAddonsMain main;
@@ -53,7 +51,8 @@ public class UserInfo implements SocketResponse {
             return;
         }
         List<CommonItem> items = new ArrayList<>();
-        for (String name : infoResponse.getPackageAmount().keySet()) {
+        HashMap<String, Double> sorted = sortByValue(infoResponse.getPackagePrice());
+        for (String name : sorted.keySet()) {
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text("Amount: " + infoResponse.getPackageAmount().get(name)));
             lore.add(Component.text("Price: " + infoResponse.getPackagePrice().get(name)));
@@ -64,4 +63,22 @@ public class UserInfo implements SocketResponse {
         CommonInventory inventory =  new CommonInventory(title, 54, items);
         main.getCommon().runOnMainThread(() -> main.getCommon().userGetter().get(infoResponse.getSender()).openInventory(inventory));
     }
+
+    public HashMap<String, Double> sortByValue(HashMap<String, Double> hm)
+    {
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Double> > list =
+                new LinkedList<>(hm.entrySet());
+
+        // Sort the list
+        Collections.sort(list, Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // put data from sorted list to hashmap
+        HashMap<String, Double> temp = new LinkedHashMap<>();
+        for (Map.Entry<String, Double> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+
 }
