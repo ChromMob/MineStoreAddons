@@ -4,3 +4,6 @@ purchase-announcer:
 user-info:
   enabled: true
   not-found: "<red>%player% did not buy any packages yet."
+  gui:
+    title: "<gold>%player%'s packages"
+    item: "PAPER"
