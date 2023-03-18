@@ -6,35 +6,36 @@ import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.addons.MineStoreAddon;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class MineStoreAddonsMain extends MineStoreAddon {
     private MineStoreCommon common;
     private ConnectionHandler connectionHandler;
     private File configFile;
-    private LinkedHashMap<String, Object> config;
-    private Yaml yaml = new Yaml();
+    private Map<String, Object> config = new LinkedHashMap<>();
+    private Yaml yaml;
     private Announcer announcer;
     private UserInfo userInfo;
     @Override
     public void onEnable() {
         common = MineStoreCommon.getInstance();
         configFile = new File(MineStoreCommon.getInstance().configFile().getParentFile() + File.separator + "addons" + File.separator + "MineStoreAddons" + File.separator + "config.yml");
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setIndent(2);
+        options.setPrettyFlow(true);
+        yaml = new Yaml(options);
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
+            createConfig();
             try {
-                Files.copy(getClass().getClassLoader().getResourceAsStream("config.yml"), configFile.toPath());
+                yaml.dump(config, new FileWriter(configFile));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -46,6 +47,21 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         }
         registerListeners();
         connectToWebsocket();
+    }
+
+    private void createConfig() {
+        config.put("purchase-announcer", new LinkedHashMap<String, Object>() {{
+            put("enabled", true);
+            put("format", "<red><bold>%player%</bold></red> bought <bold>%package%</bold> for <gold>%price%");
+        }});
+        config.put("user-info", new LinkedHashMap<String, Object>() {{
+            put("enabled", true);
+            put("not-found", "<red>%player% did not buy any packages yet.");
+            put("gui", new LinkedHashMap<String, Object>() {{
+                put("title", "<gold>%player%'s packages");
+                put("item", "PAPER");
+            }});
+        }});
     }
 
     private boolean reconnecting = false;
