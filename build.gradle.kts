@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.chrommob:MineStoreRecode:5af9cd523a")
+    compileOnly("com.github.chrommob:MineStoreRecode:master-SNAPSHOT")
     compileOnly("net.kyori:adventure-api:4.12.0")
     compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
     compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")

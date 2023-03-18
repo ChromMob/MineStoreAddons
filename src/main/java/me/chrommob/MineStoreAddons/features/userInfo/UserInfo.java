@@ -60,7 +60,7 @@ public class UserInfo implements SocketResponse {
             items.add(new CommonItem(Component.text(name), item, lore));
         }
         Component title = main.getCommon().miniMessage().deserialize(guiName.replaceAll("%player%", infoResponse.getUsername()));
-        main.getCommon().guiData().getGuiInfo().getTitles().add(title);
+        main.getCommon().guiData().getGuiInfo().addCustomTitle(title);
         CommonInventory inventory =  new CommonInventory(title, 54, items);
         main.getCommon().runOnMainThread(() -> main.getCommon().userGetter().get(infoResponse.getSender()).openInventory(inventory));
     }
