@@ -74,7 +74,7 @@ public class ConnectionHandler extends WebSocketClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        send(gson.toJson(new WelcomeData(new SendableKey(publicKey.getAlgorithm(), publicKey.getFormat(), publicKey.getEncoded()))));
+        send(gson.toJson(new WelcomeData(new SendableKey(publicKey.getAlgorithm(), publicKey.getFormat(), publicKey.getEncoded()), encrypt)));
         if (main.messages.size() > 0) {
             main.messages.forEach(this::send);
             main.messages.clear();
