@@ -9,16 +9,19 @@ import java.nio.charset.StandardCharsets;
 
 public class WelcomeData {
     private SendableKey publicKey;
-    private String storeUrl;
+    private byte[] storeUrl;
     private boolean apiEnabled;
     private byte[] apiKey;
-    public WelcomeData(SendableKey publicKey, Cipher encrypt) {
+    private byte[] AES;
+    public WelcomeData(SendableKey publicKey, SendableKey AES, Cipher encryptRsa, Cipher encryptAES) {
         this.publicKey = publicKey;
-        storeUrl = (String) MineStoreCommon.getInstance().configReader().get(ConfigKey.STORE_URL);
+        String storeUrl = (String) MineStoreCommon.getInstance().configReader().get(ConfigKey.STORE_URL);
         apiEnabled = (boolean) MineStoreCommon.getInstance().configReader().get(ConfigKey.API_ENABLED);
         String apiKey = (String) MineStoreCommon.getInstance().configReader().get(ConfigKey.API_KEY);
         try {
-            this.apiKey = encrypt.doFinal(apiKey.getBytes(StandardCharsets.UTF_8));
+            this.storeUrl = encryptAES.doFinal(storeUrl.getBytes(StandardCharsets.UTF_8));
+            this.apiKey = encryptAES.doFinal(apiKey.getBytes(StandardCharsets.UTF_8));
+            this.AES = encryptRsa.doFinal(AES.getEncoded());
         } catch (Exception e) {
             e.printStackTrace();
         }

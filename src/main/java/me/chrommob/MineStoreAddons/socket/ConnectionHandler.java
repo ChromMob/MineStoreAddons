@@ -8,6 +8,8 @@ import me.chrommob.minestore.common.MineStoreCommon;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
@@ -23,21 +25,26 @@ public class ConnectionHandler extends WebSocketClient {
     private Set<SocketResponse> socketResponses = new HashSet<>();
     private PrivateKey privateKey;
     private PublicKey publicKey;
-    private Cipher decrypt;
-    private Cipher encrypt;
+    private Cipher decryptRSA;
+    private Cipher encryptRSA;
     private PublicKey serverPublicKey;
+    private SecretKey secretKey;
+    private Cipher encryptAES;
+    private Cipher decryptAES;
     private boolean welcomeSent;
-    private MessageDigest digest;
-    private KeyFactory keyFactory;
+    private MessageDigest digestSha;
+    private KeyFactory keyFactoryRSA;
 
     public ConnectionHandler(String serverUri, MineStoreAddonsMain main) {
         super(URI.create(serverUri));
         welcomeSent = false;
         this.main = main;
         KeyPairGenerator kpg = null;
+        KeyGenerator kg = null;
         try {
             kpg = KeyPairGenerator.getInstance("RSA");
-            keyFactory = KeyFactory.getInstance("RSA");
+            kg = KeyGenerator.getInstance("AES");
+            keyFactoryRSA = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -45,11 +52,19 @@ public class ConnectionHandler extends WebSocketClient {
         KeyPair kp = kpg.generateKeyPair();
         privateKey = kp.getPrivate();
         publicKey = kp.getPublic();
+        kg.init(256);
+        secretKey = kg.generateKey();
         try {
-            decrypt = Cipher.getInstance("RSA");
-            encrypt = Cipher.getInstance("RSA");
-            digest = MessageDigest.getInstance("SHA-256");
-            decrypt.init(Cipher.DECRYPT_MODE, privateKey);
+            decryptRSA = Cipher.getInstance("RSA");
+            encryptRSA = Cipher.getInstance("RSA");
+            decryptAES = Cipher.getInstance("AES");
+            encryptAES = Cipher.getInstance("AES");
+
+            digestSha = MessageDigest.getInstance("SHA-256");
+
+            decryptRSA.init(Cipher.DECRYPT_MODE, privateKey);
+            decryptAES.init(Cipher.DECRYPT_MODE, secretKey);
+            encryptAES.init(Cipher.ENCRYPT_MODE, secretKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,16 +80,16 @@ public class ConnectionHandler extends WebSocketClient {
         message = message.replace("publickey-", "");
         SendableKey key = gson.fromJson(message, SendableKey.class);
         try {
-            serverPublicKey = keyFactory.generatePublic(new X509EncodedKeySpec(key.getEncoded()));
+            serverPublicKey = keyFactoryRSA.generatePublic(new X509EncodedKeySpec(key.getEncoded()));
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
         }
         try {
-            encrypt.init(Cipher.ENCRYPT_MODE, serverPublicKey);
+            encryptRSA.init(Cipher.ENCRYPT_MODE, serverPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        send(gson.toJson(new WelcomeData(new SendableKey(publicKey.getAlgorithm(), publicKey.getFormat(), publicKey.getEncoded()), encrypt)));
+        send(gson.toJson(new WelcomeData(new SendableKey(publicKey.getAlgorithm(), publicKey.getFormat(), publicKey.getEncoded()), new SendableKey(secretKey.getAlgorithm(), secretKey.getFormat(), secretKey.getEncoded()), encryptRSA, encryptAES)));
         if (main.messages.size() > 0) {
             main.messages.forEach(this::send);
             main.messages.clear();
@@ -98,9 +113,8 @@ public class ConnectionHandler extends WebSocketClient {
             return;
         }
         try {
-            byte[] array = text.getBytes();
-            byte[] hash = encrypt.doFinal(digest.digest(array));
-            int intHash = ByteBuffer.wrap(hash).getInt();
+            byte[] array = encryptAES.doFinal(text.getBytes());
+            byte[] hash = encryptRSA.doFinal(digestSha.digest(array));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             outputStream.write(array);
             outputStream.write(hash);
@@ -124,10 +138,10 @@ public class ConnectionHandler extends WebSocketClient {
         try {
             byte[] hash = new byte[256];
             System.arraycopy(array, array.length - 256, hash, 0, 256);
-            hash = decrypt.doFinal(hash);
+            hash = decryptRSA.doFinal(hash);
             byte[] messageBytes = new byte[array.length - 256];
             System.arraycopy(array, 0, messageBytes, 0, array.length - 256);
-            byte[] ourHash = digest.digest(messageBytes);
+            byte[] ourHash = digestSha.digest(messageBytes);
             int intHash = ByteBuffer.wrap(hash).getInt();
             int intOurHash = ByteBuffer.wrap(ourHash).getInt();
             boolean equals = intHash == intOurHash;
@@ -136,7 +150,7 @@ public class ConnectionHandler extends WebSocketClient {
                 close();
                 return;
             }
-            message = new String(messageBytes);
+            message = new String(decryptAES.doFinal(messageBytes));
         } catch (Exception e) {
             e.printStackTrace();
         }
