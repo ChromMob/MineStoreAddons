@@ -46,11 +46,11 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-//        Map<String, Object> economyConfig = (Map<String, Object>) config.get("economy");
-//        if ((boolean) economyConfig.get("enabled")) {
-//            customEconomy = new CustomEconomy();
-//            common.registerPlayerEconomyProvider(customEconomy);
-//        }
+       Map<String, Object> economyConfig = (Map<String, Object>) config.get("economy");
+        if ((boolean) economyConfig.get("enabled")) {
+            customEconomy = new CustomEconomy(this);
+            common.registerPlayerEconomyProvider(customEconomy);
+        }
     }
 
     @Override
@@ -100,6 +100,10 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         Map<String, Object> userInfo = (Map<String, Object>) config.get("user-info");
         if ((boolean) userInfo.get("enabled")) {
             connectionHandler.registerSocketResponse(this.userInfo);
+        }
+        Map<String, Object> economy = (Map<String, Object>) config.get("economy");
+        if ((boolean) economy.get("enabled")) {
+            connectionHandler.registerSocketResponse(customEconomy);
         }
     }
 
