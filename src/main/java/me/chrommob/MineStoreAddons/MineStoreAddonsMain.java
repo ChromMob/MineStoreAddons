@@ -87,6 +87,7 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         connectionHandler.connect();
         registerSocketResponses();
     }
+
     public void reconnected() {
         reconnecting = false;
     }
