@@ -1,6 +1,5 @@
 package me.chrommob.MineStoreAddons.features.economy.function;
 
-import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.features.economy.CustomEconomy;
 import me.chrommob.MineStoreAddons.features.economy.message.EconomyMessage;
 import me.chrommob.MineStoreAddons.features.economy.message.EconomyResponse;

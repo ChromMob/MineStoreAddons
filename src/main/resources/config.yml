@@ -1,9 +1,0 @@
-purchase-announcer:
-  enabled: true
-  format: "<red><bold>%player%</bold></red> bought <bold>%package%</bold> for <gold>%price%"
-user-info:
-  enabled: true
-  not-found: "<red>%player% did not buy any packages yet."
-  gui:
-    title: "<gold>%player%'s packages"
-    item: "PAPER"

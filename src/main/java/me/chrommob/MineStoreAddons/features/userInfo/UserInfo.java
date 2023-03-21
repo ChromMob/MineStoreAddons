@@ -2,6 +2,7 @@ package me.chrommob.MineStoreAddons.features.userInfo;
 
 import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
+import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
@@ -22,11 +23,9 @@ public class UserInfo implements SocketResponse {
     }
 
     private void init() {
-        Map<String, Object> userInfo = (Map<String, Object>) main.getConfig().get("user-info");
-        notFound = (String) userInfo.get("not-found");
-        Map<String, Object> gui = (Map<String, Object>) userInfo.get("gui");
-        guiName = (String) gui.get("title");
-        item = (String) gui.get("item");
+        notFound = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_NOT_FOUND);
+        guiName = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_GUI_TITLE);
+        item = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_GUI_ITEM);
         main.getCommon().commandManager().registerCommand(new Command(this));
     }
 

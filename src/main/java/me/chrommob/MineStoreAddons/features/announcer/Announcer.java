@@ -2,6 +2,7 @@ package me.chrommob.MineStoreAddons.features.announcer;
 
 import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
+import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
@@ -10,8 +11,6 @@ import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-import java.util.Map;
-
 public class Announcer extends MineStoreListener implements SocketResponse {
     private final ConnectionHandler connectionHandler;
     private final Gson gs = new Gson();
@@ -19,8 +18,7 @@ public class Announcer extends MineStoreListener implements SocketResponse {
     private MiniMessage mm = MiniMessage.miniMessage();
     public Announcer(MineStoreAddonsMain main) {
         //Get file as input stream
-        Map<String, Object> announcer = (Map<String, Object>) main.getConfig().get("purchase-announcer");
-        this.message = (String) announcer.get("format");
+        this.message = (String) main.getConfigHandler().get(ConfigAddonKeys.PURCHASE_ANNOUNCER_FORMAT);
         this.connectionHandler = main.getConnectionHandler();
     }
     @Override

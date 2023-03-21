@@ -47,7 +47,7 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
     }
 
     public void onEnable() {
-        MineStoreCommon.getInstance().commandManager().registerCommand(new EconomyCommand(this));
+        MineStoreCommon.getInstance().commandManager().registerCommand(new EconomyCommand(this, main));
     }
 
     public void addAwaiter(ResponseAwaiter responseAwaiter) {

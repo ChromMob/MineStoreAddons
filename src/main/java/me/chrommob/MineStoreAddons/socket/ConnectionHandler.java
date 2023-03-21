@@ -7,6 +7,7 @@ import me.chrommob.MineStoreAddons.socket.data.WelcomeData;
 import me.chrommob.minestore.common.MineStoreCommon;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
