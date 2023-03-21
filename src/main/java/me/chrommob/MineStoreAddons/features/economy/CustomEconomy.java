@@ -16,10 +16,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
     private final MineStoreAddonsMain main;
     private static CustomEconomy instance;
+    private EconomyCommand economyCommand;
     private final Gson gson = new Gson();
     public CustomEconomy(MineStoreAddonsMain main) {
         instance = this;
         this.main = main;
+    }
+
+    public void reload() {
+        economyCommand.loadConfig();
     }
 
     @Override
@@ -47,7 +52,8 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
     }
 
     public void onEnable() {
-        MineStoreCommon.getInstance().commandManager().registerCommand(new EconomyCommand(this, main));
+        economyCommand = new EconomyCommand(this, main);
+        MineStoreCommon.getInstance().commandManager().registerCommand(economyCommand);
     }
 
     public void addAwaiter(ResponseAwaiter responseAwaiter) {

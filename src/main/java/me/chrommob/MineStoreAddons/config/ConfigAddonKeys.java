@@ -10,7 +10,7 @@ public enum ConfigAddonKeys {
     USER_INFO_GUI_TITLE(new Configuration("user-info.gui.title", "<gold>%player%'s packages")),
     USER_INFO_GUI_ITEM(new Configuration("user-info.gui.item", "PAPER")),
     ECONOMY_ENABLED(new Configuration("economy.enabled", true)),
-    ECONOMY_BALANCE_FORMAT(new Configuration("economy.message.balance", "<gold>%balance%")),
+    ECONOMY_BALANCE_FORMAT(new Configuration("economy.message.balance", "<gold>Your balance is %amount%")),
     ECONOMY_ADD_FORMAT_SELF(new Configuration("economy.message.add", "<gold>Added %amount% to your balance")),
     ECONOMY_ADD_FORMAT_OTHER(new Configuration("economy.message.add-other", "<gold>Added %amount% to %player%'s balance")),
     ECONOMY_REMOVE_FORMAT_SELF(new Configuration("economy.message.remove", "<gold>Removed %amount% from your balance")),

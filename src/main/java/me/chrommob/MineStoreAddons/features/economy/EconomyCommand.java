@@ -36,7 +36,7 @@ public class EconomyCommand extends BaseCommand {
         loadConfig();
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         balanceFormat = (String) main.getConfigHandler().get(ConfigAddonKeys.ECONOMY_BALANCE_FORMAT);
         addFormat = (String) main.getConfigHandler().get(ConfigAddonKeys.ECONOMY_ADD_FORMAT_SELF);
         addFormatOther = (String) main.getConfigHandler().get(ConfigAddonKeys.ECONOMY_ADD_FORMAT_OTHER);
@@ -54,7 +54,7 @@ public class EconomyCommand extends BaseCommand {
             @Override
             public void onReceive(EconomyResponse economyResponse) {
                 if (economyResponse.isSuccess())
-                    commonUser.sendMessage(miniMessage.deserialize(balanceFormat.replace("%balance%", String.valueOf(economyResponse.fromValue()))));
+                    commonUser.sendMessage(miniMessage.deserialize(balanceFormat.replace("%amount%", String.valueOf(economyResponse.fromValue()))));
                 else
                     commonUser.sendMessage("Failed to get your balance. Reason: " + economyResponse.getMessage());
             }
