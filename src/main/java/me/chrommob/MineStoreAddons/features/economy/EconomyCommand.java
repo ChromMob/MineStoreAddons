@@ -46,6 +46,7 @@ public class EconomyCommand extends BaseCommand {
         setFormatOther = (String) main.getConfigHandler().get(ConfigAddonKeys.ECONOMY_SET_FORMAT_OTHER);
     }
 
+    @CommandPermission("ms.economy.balance")
     @Subcommand("balance")
     public void onBalance(AbstractUser user) {
         CommonUser commonUser = user.user();
