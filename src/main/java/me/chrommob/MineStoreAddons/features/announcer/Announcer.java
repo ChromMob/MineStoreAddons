@@ -15,28 +15,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Announcer extends MineStoreListener implements SocketResponse {
-    private final ConnectionHandler connectionHandler;
+    private MineStoreAddonsMain main;
     private final Gson gs = new Gson();
     private String message;
     private MiniMessage mm = MiniMessage.miniMessage();
     public Announcer(MineStoreAddonsMain main) {
         //Get file as input stream
         this.message = (String) main.getConfigHandler().get(ConfigAddonKeys.PURCHASE_ANNOUNCER_FORMAT);
-        this.connectionHandler = main.getConnectionHandler();
+        this.main = main;
     }
 
     private Set<ParsedResponse> toSend = new HashSet<>();
     @Override
     public void onPurchase(ParsedResponse event) {
-        if (connectionHandler == null) {
+        if (main.getConnectionHandler() == null) {
             toSend.add(event);
             return;
         }
         if (toSend.size() > 0) {
-            toSend.forEach(parsedResponse -> connectionHandler.addMessage("announcer-" + gs.toJson(parsedResponse)));
+            toSend.forEach(parsedResponse -> main.getConnectionHandler().addMessage("announcer-" + gs.toJson(parsedResponse)));
             toSend.clear();
         }
-        connectionHandler.addMessage("announcer-" + gs.toJson(event));
+        main.getConnectionHandler().addMessage("announcer-" + gs.toJson(event));
     }
 
     @Override
