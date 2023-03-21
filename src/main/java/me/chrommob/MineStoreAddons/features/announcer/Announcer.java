@@ -11,6 +11,9 @@ import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Announcer extends MineStoreListener implements SocketResponse {
     private final ConnectionHandler connectionHandler;
     private final Gson gs = new Gson();
@@ -21,8 +24,18 @@ public class Announcer extends MineStoreListener implements SocketResponse {
         this.message = (String) main.getConfigHandler().get(ConfigAddonKeys.PURCHASE_ANNOUNCER_FORMAT);
         this.connectionHandler = main.getConnectionHandler();
     }
+
+    private Set<ParsedResponse> toSend = new HashSet<>();
     @Override
     public void onPurchase(ParsedResponse event) {
+        if (connectionHandler == null) {
+            toSend.add(event);
+            return;
+        }
+        if (toSend.size() > 0) {
+            toSend.forEach(parsedResponse -> connectionHandler.addMessage("announcer-" + gs.toJson(parsedResponse)));
+            toSend.clear();
+        }
         connectionHandler.addMessage("announcer-" + gs.toJson(event));
     }
 
