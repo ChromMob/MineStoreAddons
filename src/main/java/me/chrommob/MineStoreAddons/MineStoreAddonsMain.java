@@ -89,6 +89,7 @@ public class MineStoreAddonsMain extends MineStoreAddon {
 
     @Override
     public void onReload() {
+        configHandler.reload();
         if (announcer == null && (boolean) configHandler.get(ConfigAddonKeys.PURCHASE_ANNOUNCER_ENABLED)) {
             common.registerListener(new Announcer(this));
         }
