@@ -4,6 +4,7 @@ import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.config.ConfigHandler;
 import me.chrommob.MineStoreAddons.features.announcer.Announcer;
 import me.chrommob.MineStoreAddons.features.economy.CustomEconomy;
+import me.chrommob.MineStoreAddons.features.manualStorage.ManualCommandStorage;
 import me.chrommob.MineStoreAddons.features.userInfo.UserInfo;
 import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.minestore.common.MineStoreCommon;
@@ -24,6 +25,7 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     private Announcer announcer;
     private UserInfo userInfo;
     private CustomEconomy customEconomy;
+    private ManualCommandStorage manualCommandStorage;
 
     @Override
     public void onLoad() {
@@ -40,6 +42,10 @@ public class MineStoreAddonsMain extends MineStoreAddon {
     public void onEnable() {
         if (customEconomy != null) {
             customEconomy.onEnable();
+        }
+        if ((boolean) configHandler.get(ConfigAddonKeys.MANUAL_REDEEM_ENABLED)) {
+            manualCommandStorage = new ManualCommandStorage(this);
+            common.overrideCommandStorage(manualCommandStorage);
         }
         registerListeners();
         connectToWebsocket();
@@ -67,6 +73,9 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         }
         if ((boolean) configHandler.get(ConfigAddonKeys.ECONOMY_ENABLED)) {
             connectionHandler.registerSocketResponse(customEconomy);
+        }
+        if ((boolean) configHandler.get(ConfigAddonKeys.MANUAL_REDEEM_ENABLED)) {
+            connectionHandler.registerSocketResponse(manualCommandStorage);
         }
     }
 
