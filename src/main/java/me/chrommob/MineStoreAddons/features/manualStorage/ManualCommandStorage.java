@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
+import me.chrommob.minestore.common.addons.MineStoreListener;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
 import me.chrommob.minestore.common.interfaces.commands.CommandStorageInterface;
+import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.HashSet;
@@ -14,10 +17,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ManualCommandStorage implements CommandStorageInterface, SocketResponse {
-    private MineStoreAddonsMain main;
+public class ManualCommandStorage extends MineStoreListener implements CommandStorageInterface, SocketResponse {
+    private final MineStoreAddonsMain main;
     private static ManualCommandStorage instance;
-    private MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private Gson gson = new Gson();
     public ManualCommandStorage(MineStoreAddonsMain mineStoreAddonsMain) {
         instance = this;
@@ -42,7 +45,7 @@ public class ManualCommandStorage implements CommandStorageInterface, SocketResp
     public void addStorageResponse(StorageRequest request) {
         if (main.getConnectionHandler() == null) return;
         requests.put(request.getUuid(), request);
-        main.getConnectionHandler().addMessage("storage-" + gson.toJson(request));
+        main.getConnectionHandler().addMessage("storage-" + request.getName() + ":" + request.getUuid());
     }
 
     @Override
@@ -72,6 +75,11 @@ public class ManualCommandStorage implements CommandStorageInterface, SocketResp
             commands.clear();
         }
         main.getConnectionHandler().addMessage("storage-" + gson.toJson(command));
+    }
+
+    @Override
+    public void onClick(CommonItem item, CommonUser commonUser, Component title) {
+
     }
 
     @Override
