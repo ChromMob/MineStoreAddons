@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
+import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.minestore.common.MineStoreCommon;
@@ -37,6 +38,10 @@ public class RedeemCommand extends BaseCommand {
                     return;
                 }
                 commonUser.sendMessage("Storage response: " + parsedResponses.size() + " packages found");
+                Gson gson = new Gson();
+                for (ParsedResponse parsedResponse : parsedResponses) {
+                    commonUser.sendMessage(gson.toJson(parsedResponse));
+                }
             }
         });
     }
