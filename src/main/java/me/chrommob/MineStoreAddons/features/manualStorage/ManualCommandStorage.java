@@ -51,6 +51,10 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
     public void addStorageResponse(StorageRequest request) {
         if (main.getConnectionHandler() == null) return;
         requests.put(request.getUuid(), request);
+        if (request.getPackageName() != null) {
+            main.getConnectionHandler().addMessage("storage-" + request.getName() + ":" + request.getUuid() + ":" + request.getPackageName());
+            return;
+        }
         main.getConnectionHandler().addMessage("storage-" + request.getName() + ":" + request.getUuid());
     }
 

@@ -10,8 +10,17 @@ public abstract class StorageRequest {
         this.uuid = java.util.UUID.randomUUID().toString();
         ManualCommandStorage.getInstance().addStorageResponse(this);
     }
+
+    public StorageRequest(String name, String packageName) {
+        this.name = name;
+        this.packageName = packageName;
+        this.uuid = java.util.UUID.randomUUID().toString();
+        ManualCommandStorage.getInstance().addStorageResponse(this);
+    }
+
     private String uuid;
     private String name;
+    private String packageName;
 
     public abstract void onResponse(Set<AnnouncerResponse> parsedResponses, String command);
 
@@ -21,5 +30,9 @@ public abstract class StorageRequest {
 
     public String getName() {
         return name;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 }
