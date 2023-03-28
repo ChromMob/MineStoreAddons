@@ -10,10 +10,16 @@ import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.features.announcer.AnnouncerResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
+import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
+import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.AbstractUser;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -38,11 +44,15 @@ public class RedeemCommand extends BaseCommand {
                     commonUser.sendMessage(miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_NO_PACKAGES)));
                     return;
                 }
-                commonUser.sendMessage("Storage response: " + parsedResponses.size() + " packages found");
-                Gson gson = new Gson();
+                List<CommonItem> commonItems = new ArrayList<>();
                 for (AnnouncerResponse parsedResponse : parsedResponses) {
-                    commonUser.sendMessage(gson.toJson(parsedResponse));
+                    List<Component> lore = new ArrayList<>();
+                    lore.add(Component.text("Click to redeem!").color(NamedTextColor.GREEN));
+                    CommonItem commonItem = new CommonItem(Component.text(parsedResponse.getPackageName()).color(NamedTextColor.AQUA), (String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_ITEM), lore);
+                    commonItems.add(commonItem);
                 }
+                CommonInventory commonInventory = new CommonInventory(miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE)), 54, commonItems);
+                commonUser.openInventory(commonInventory);
             }
         });
     }

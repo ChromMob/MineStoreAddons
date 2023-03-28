@@ -12,6 +12,8 @@ import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 
 import java.util.HashSet;
 import java.util.Map;
@@ -80,8 +82,20 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
 
     @Override
     public void onClick(CommonItem item, CommonUser commonUser, Component title) {
-
+        if (main.getConnectionHandler() == null) return;
+        String titleString = LegacyComponentSerializer.legacySection().serialize(title);
+        Component component = miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE)));
+        String componentString = LegacyComponentSerializer.legacySection().serialize(component);
+        if (!titleString.equals(componentString)) return;
+        addStorageResponse(new StorageRequest(commonUser.getName()) {
+            @Override
+            public void onResponse(Set<AnnouncerResponse> parsedResponses) {
+                if (parsedResponses == null || parsedResponses.isEmpty()) return;
+                commonUser.sendMessage(miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_FORMAT)).replace("%amount%", parsedResponses.size() + "")));
+            }
+        });
     }
+
 
     @Override
     public void init() {}
