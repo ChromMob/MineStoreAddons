@@ -55,6 +55,7 @@ public class RedeemCommand extends BaseCommand {
                     commonItems.add(commonItem);
                 }
                 CommonInventory commonInventory = new CommonInventory(title, 54, commonItems);
+                main.getCommon().guiData().getGuiInfo().formatInventory(commonInventory, true);
                 commonUser.openInventory(commonInventory);
             }
         });
