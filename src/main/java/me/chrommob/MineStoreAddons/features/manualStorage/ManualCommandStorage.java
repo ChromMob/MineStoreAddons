@@ -32,6 +32,7 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         this.main = mineStoreAddonsMain;
         redeemCommand = new RedeemCommand(this, main);
         main.getCommon().commandManager().registerCommand(redeemCommand);
+        main.getCommon().registerListener(this);
     }
 
     @Override
@@ -94,12 +95,15 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         Component component = miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE)));
         String componentString = LegacyComponentSerializer.legacySection().serialize(component);
         if (!titleString.equals(componentString)) return;
-        addStorageResponse(new StorageRequest(commonUser.getName()) {
+        String packageName = LegacyComponentSerializer.legacySection().serialize(item.getName());
+        System.out.println(packageName);
+        addStorageResponse(new StorageRequest(commonUser.getName(), packageName) {
             @Override
             public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) return;
                 if (command == null || command.isEmpty()) return;
                 main.getCommon().commandExecuter().execute(command);
+                main.getCommon().userGetter().get(commonUser.getName()).sendMessage("§aYou have redeemed the package §e" + packageName + "§a!");
             }
         });
     }

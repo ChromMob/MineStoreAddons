@@ -13,8 +13,8 @@ public abstract class StorageRequest {
 
     public StorageRequest(String name, String packageName) {
         this.name = name;
-        this.packageName = packageName;
         this.uuid = java.util.UUID.randomUUID().toString();
+        this.packageName = packageName;
         ManualCommandStorage.getInstance().addStorageResponse(this);
     }
 
