@@ -22,7 +22,7 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 @CommandAlias("redeem")
-@CommandPermission("minestoreaddons.redeem")
+@CommandPermission("ms.redeem")
 public class RedeemCommand extends BaseCommand {
     private ManualCommandStorage manualCommandStorage;
     private MiniMessage miniMessage = MiniMessage.miniMessage();
