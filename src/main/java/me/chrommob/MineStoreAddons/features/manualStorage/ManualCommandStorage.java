@@ -25,10 +25,12 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
     private static ManualCommandStorage instance;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private Gson gson = new Gson();
+    private RedeemCommand redeemCommand;
     public ManualCommandStorage(MineStoreAddonsMain mineStoreAddonsMain) {
         instance = this;
         this.main = mineStoreAddonsMain;
-        main.getCommon().commandManager().registerCommand(new RedeemCommand(this, main));
+        redeemCommand = new RedeemCommand(this, main);
+        main.getCommon().commandManager().registerCommand(redeemCommand);
     }
 
     @Override
@@ -102,5 +104,9 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
 
     public static ManualCommandStorage getInstance() {
         return instance;
+    }
+
+    public void reload() {
+        redeemCommand.reload();
     }
 }

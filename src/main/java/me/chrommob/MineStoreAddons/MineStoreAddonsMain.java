@@ -108,6 +108,13 @@ public class MineStoreAddonsMain extends MineStoreAddon {
         if (userInfo == null && (boolean) configHandler.get(ConfigAddonKeys.USER_INFO_ENABLED)) {
             new UserInfo(this);
         }
+        if (manualCommandStorage == null && (boolean) configHandler.get(ConfigAddonKeys.MANUAL_REDEEM_ENABLED)) {
+            ManualCommandStorage manualCommandStorage = new ManualCommandStorage(this);
+            common.overrideCommandStorage(manualCommandStorage);
+        }
+        if (manualCommandStorage != null) {
+            manualCommandStorage.reload();
+        }
     }
 
     public MineStoreCommon getCommon() {

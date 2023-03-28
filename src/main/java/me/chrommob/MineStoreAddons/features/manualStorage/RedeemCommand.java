@@ -29,9 +29,12 @@ public class RedeemCommand extends BaseCommand {
     private ManualCommandStorage manualCommandStorage;
     private MiniMessage miniMessage = MiniMessage.miniMessage();
     private MineStoreAddonsMain main;
+    private Component title;
     public RedeemCommand(ManualCommandStorage manualCommandStorage, MineStoreAddonsMain main) {
         this.manualCommandStorage = manualCommandStorage;
         this.main = main;
+        this.title = miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE));
+        main.getCommon().guiData().getGuiInfo().addCustomTitle(title);
     }
 
     @Default
@@ -51,9 +54,14 @@ public class RedeemCommand extends BaseCommand {
                     CommonItem commonItem = new CommonItem(Component.text(parsedResponse.getPackageName()).color(NamedTextColor.AQUA), (String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_ITEM), lore);
                     commonItems.add(commonItem);
                 }
-                CommonInventory commonInventory = new CommonInventory(miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE)), 54, commonItems);
+                CommonInventory commonInventory = new CommonInventory(title, 54, commonItems);
                 commonUser.openInventory(commonInventory);
             }
         });
+    }
+
+    public void reload() {
+        this.title = miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE));
+        main.getCommon().guiData().getGuiInfo().addCustomTitle(title);
     }
 }
