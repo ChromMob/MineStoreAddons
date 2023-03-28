@@ -26,7 +26,6 @@ public enum ConfigAddonKeys {
     MANUAL_REDEEM_MESSAGE_ENABLED(new Configuration("manual-redeem.message-enabled", true)),
     MANUAL_REDEEM_MESSAGE_FORMAT(new Configuration("manual-redeem.message", "<gold>You have %amount% packages to redeem. Run <bold>/redeem</bold> to redeem them.")),
     MANUAL_REDEEM_NO_PACKAGES(new Configuration("manual-redeem.no-packages", "<gold>You have no packages to redeem.")),
-    MANUAL_REDEEM_FORMAT(new Configuration("manual-redeem.format", "<gold>Click to redeem %package%")),
     MANUAL_REDEEM_GUI_TITLE(new Configuration("manual-redeem.gui.title", "<gold>Redeem packages")),
     MANUAL_REDEEM_GUI_ITEM(new Configuration("manual-redeem.gui.item", "PAPER"));
 
