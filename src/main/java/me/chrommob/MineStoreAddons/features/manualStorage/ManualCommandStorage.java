@@ -9,16 +9,17 @@ import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.addons.MineStoreListener;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
 import me.chrommob.minestore.common.interfaces.commands.CommandStorageInterface;
+import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ManualCommandStorage extends MineStoreListener implements CommandStorageInterface, SocketResponse {
@@ -95,15 +96,31 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         Component component = miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_TITLE)));
         String componentString = LegacyComponentSerializer.legacySection().serialize(component);
         if (!titleString.equals(componentString)) return;
-        String packageName = LegacyComponentSerializer.legacySection().serialize(item.getName());
-        System.out.println(packageName);
+        String packageName = PlainTextComponentSerializer.plainText().serialize(item.getName());
+        if (packageName.isEmpty() || packageName == " " || packageName == null) return;
         addStorageResponse(new StorageRequest(commonUser.getName(), packageName) {
             @Override
             public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
-                if (parsedResponses == null || parsedResponses.isEmpty()) return;
-                if (command == null || command.isEmpty()) return;
+                if (command == null || command.isEmpty() ||parsedResponses == null || parsedResponses.isEmpty()) {
+                    CommonInventory commonInventory = new CommonInventory(title, 54, new ArrayList<>());
+                    main.getCommon().guiData().getGuiInfo().formatInventory(commonInventory, true);
+                    main.getCommon().runOnMainThread(() -> {
+                        commonUser.openInventory(commonInventory);
+                    });
+                }
                 main.getCommon().commandExecuter().execute(command);
-                main.getCommon().userGetter().get(commonUser.getName()).sendMessage("§aYou have redeemed the package §e" + packageName + "§a!");
+                List<CommonItem> commonItems = new ArrayList<>();
+                for (AnnouncerResponse parsedResponse : parsedResponses) {
+                    List<Component> lore = new ArrayList<>();
+                    lore.add(Component.text("Click to redeem!").color(NamedTextColor.GREEN));
+                    CommonItem commonItem = new CommonItem(Component.text(parsedResponse.getPackageName()).color(NamedTextColor.AQUA), (String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_ITEM), lore);
+                    commonItems.add(commonItem);
+                }
+                CommonInventory commonInventory = new CommonInventory(title, 54, commonItems);
+                main.getCommon().guiData().getGuiInfo().formatInventory(commonInventory, true);
+                main.getCommon().runOnMainThread(() -> {
+                    commonUser.openInventory(commonInventory);
+                });
             }
         });
     }
