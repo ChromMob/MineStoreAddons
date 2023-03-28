@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.features.announcer.AnnouncerResponse;
+import me.chrommob.MineStoreAddons.features.manualStorage.message.StorageResponse;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.addons.MineStoreListener;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
@@ -42,7 +43,7 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         if (storageResponse == null) return;
         StorageRequest storageRequest = requests.get(storageResponse.getUuid());
         if (storageRequest == null) return;
-        storageRequest.onResponse(storageResponse.getParsedResponses());
+        storageRequest.onResponse(storageResponse.getParsedResponses(), storageResponse.getCommand());
         requests.remove(storageResponse.getUuid());
     }
 
@@ -59,7 +60,7 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         if (!(boolean) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_ENABLED)) return;
         main.getConnectionHandler().addMessage("storage-" + gson.toJson(new StorageRequest(username) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses) {
+            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) return;
                 CommonUser user = main.getCommon().userGetter().get(username);
                 if (user == null) return;
@@ -91,9 +92,10 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         if (!titleString.equals(componentString)) return;
         addStorageResponse(new StorageRequest(commonUser.getName()) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses) {
+            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) return;
-                commonUser.sendMessage(miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_FORMAT)).replace("%amount%", parsedResponses.size() + "")));
+                if (command == null || command.isEmpty()) return;
+                main.getCommon().commandExecuter().execute(command);
             }
         });
     }

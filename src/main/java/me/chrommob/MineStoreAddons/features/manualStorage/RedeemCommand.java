@@ -4,12 +4,10 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.features.announcer.AnnouncerResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
-import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
 import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.AbstractUser;
@@ -42,7 +40,7 @@ public class RedeemCommand extends BaseCommand {
         CommonUser commonUser = MineStoreCommon.getInstance().userGetter().get(user.user().getName());
         manualCommandStorage.addStorageResponse(new StorageRequest(user.user().getName()) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses) {
+            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) {
                     commonUser.sendMessage(miniMessage.deserialize((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_NO_PACKAGES)));
                     return;
