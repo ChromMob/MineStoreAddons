@@ -24,7 +24,8 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
     }
 
     public void reload() {
-        economyCommand.loadConfig();
+        if (economyCommand != null)
+            economyCommand.loadConfig();
     }
 
     @Override
