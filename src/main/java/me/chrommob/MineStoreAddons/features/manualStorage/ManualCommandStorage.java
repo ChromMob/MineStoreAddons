@@ -43,6 +43,7 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         response = response.replace("storage-", "");
         StorageResponse storageResponse = gson.fromJson(response, StorageResponse.class);
         if (storageResponse == null) return;
+        storageResponse.parse(gson);
         StorageRequest storageRequest = requests.get(storageResponse.getUuid());
         if (storageRequest == null) return;
         storageRequest.onResponse(storageResponse.getParsedResponses(), storageResponse.getCommand());
@@ -63,10 +64,11 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
     @Override
     public void onPlayerJoin(String username) {
         if (main.getConnectionHandler() == null) return;
+        if (username == null || username.isEmpty()) return;
         if (!(boolean) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_ENABLED)) return;
         main.getConnectionHandler().addMessage("storage-" + gson.toJson(new StorageRequest(username) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
+            public void onResponse(Map<AnnouncerResponse, Integer> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) return;
                 CommonUser user = main.getCommon().userGetter().get(username);
                 if (user == null) return;
@@ -87,15 +89,21 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
             commands.clear();
         }
         main.getConnectionHandler().addMessage("storage-" + gson.toJson(command));
-        if (!(boolean) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_ENABLED)) return;
+        if (!(boolean) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_ENABLED)) {
+            return;
+        }
         String username = command.username();
         if (username == null || username.isEmpty()) return;
         CommonUser user = main.getCommon().userGetter().get(username);
-        if (user == null) return;
-        if (!user.isOnline()) return;
-        main.getConnectionHandler().addMessage("storage-" + gson.toJson(new StorageRequest(command.username()) {
+        if (user == null) {
+            return;
+        }
+        if (!user.isOnline()) {
+            return;
+        }
+        main.getConnectionHandler().addMessage("storage-" + gson.toJson(new StorageRequest(username) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
+            public void onResponse(Map<AnnouncerResponse, Integer> parsedResponses, String command) {
                 if (parsedResponses == null || parsedResponses.isEmpty()) return;
                 CommonUser user = main.getCommon().userGetter().get(username);
                 if (user == null) return;
@@ -113,9 +121,9 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
         if (!titleString.equals(componentString)) return;
         String packageName = PlainTextComponentSerializer.plainText().serialize(item.getName());
         if (packageName.isEmpty() || packageName == " " || packageName == null) return;
-        addStorageResponse(new StorageRequest(commonUser.getName(), packageName) {
+        new StorageRequest(commonUser.getName(), packageName) {
             @Override
-            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
+            public void onResponse(Map<AnnouncerResponse, Integer> parsedResponses, String command) {
                 if (command == null || command.isEmpty() ||parsedResponses == null || parsedResponses.isEmpty()) {
                     CommonInventory commonInventory = new CommonInventory(title, 54, new ArrayList<>());
                     main.getCommon().guiData().getGuiInfo().formatInventory(commonInventory, true);
@@ -125,10 +133,11 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
                 }
                 main.getCommon().commandExecuter().execute(command);
                 List<CommonItem> commonItems = new ArrayList<>();
-                for (AnnouncerResponse parsedResponse : parsedResponses) {
+                for (AnnouncerResponse parsedResponse : parsedResponses.keySet()) {
                     List<Component> lore = new ArrayList<>();
                     lore.add(Component.text("Click to redeem!").color(NamedTextColor.GREEN));
-                    CommonItem commonItem = new CommonItem(Component.text(parsedResponse.getPackageName()).color(NamedTextColor.AQUA), (String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_ITEM), lore);
+                    int amount = parsedResponses.get(parsedResponse);
+                    CommonItem commonItem = new CommonItem(Component.text(parsedResponse.getPackageName()).color(NamedTextColor.AQUA), (String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_GUI_ITEM), lore, amount);
                     commonItems.add(commonItem);
                 }
                 CommonInventory commonInventory = new CommonInventory(title, 54, commonItems);
@@ -137,7 +146,7 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
                     commonUser.openInventory(commonInventory);
                 });
             }
-        });
+        };
     }
 
 

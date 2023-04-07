@@ -2,7 +2,7 @@ package me.chrommob.MineStoreAddons.features.manualStorage;
 
 import me.chrommob.MineStoreAddons.features.announcer.AnnouncerResponse;
 
-import java.util.Set;
+import java.util.Map;
 
 public abstract class StorageRequest {
     public StorageRequest(String name) {
@@ -22,7 +22,7 @@ public abstract class StorageRequest {
     private String name;
     private String packageName;
 
-    public abstract void onResponse(Set<AnnouncerResponse> parsedResponses, String command);
+    public abstract void onResponse(Map<AnnouncerResponse, Integer> parsedResponses, String command);
 
     public String getUuid() {
         return uuid;

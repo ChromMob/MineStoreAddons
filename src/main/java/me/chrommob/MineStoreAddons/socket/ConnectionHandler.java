@@ -99,12 +99,16 @@ public class ConnectionHandler extends WebSocketClient {
 
     @Override
     public void send(String text) {
+        boolean isWelcome = false;
+        try {
+            isWelcome = gson.fromJson(text, WelcomeData.class) != null;
+        } catch (Exception ignored) {}
         if (isClosed()) {
             main.messages.add(text);
             main.connectToWebsocket();
             return;
         }
-        if (!welcomeSent && gson.fromJson(text, WelcomeData.class) != null) {
+        if (!welcomeSent && isWelcome) {
             super.send(text);
             welcomeSent = true;
             return;
