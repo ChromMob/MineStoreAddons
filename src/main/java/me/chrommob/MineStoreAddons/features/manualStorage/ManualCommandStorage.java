@@ -87,6 +87,21 @@ public class ManualCommandStorage extends MineStoreListener implements CommandSt
             commands.clear();
         }
         main.getConnectionHandler().addMessage("storage-" + gson.toJson(command));
+        if (!(boolean) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_ENABLED)) return;
+        String username = command.username();
+        if (username == null || username.isEmpty()) return;
+        CommonUser user = main.getCommon().userGetter().get(username);
+        if (user == null) return;
+        if (!user.isOnline()) return;
+        main.getConnectionHandler().addMessage("storage-" + gson.toJson(new StorageRequest(command.username()) {
+            @Override
+            public void onResponse(Set<AnnouncerResponse> parsedResponses, String command) {
+                if (parsedResponses == null || parsedResponses.isEmpty()) return;
+                CommonUser user = main.getCommon().userGetter().get(username);
+                if (user == null) return;
+                user.sendMessage(miniMessage.deserialize(((String) main.getConfigHandler().get(ConfigAddonKeys.MANUAL_REDEEM_MESSAGE_FORMAT)).replace("%amount%", parsedResponses.size() + "")));
+            }
+        }));
     }
 
     @Override
