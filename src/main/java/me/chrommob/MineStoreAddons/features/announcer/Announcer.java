@@ -3,13 +3,12 @@ package me.chrommob.MineStoreAddons.features.announcer;
 import com.google.gson.Gson;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
-import me.chrommob.MineStoreAddons.socket.ConnectionHandler;
 import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.addons.MineStoreListener;
 import me.chrommob.minestore.common.commandGetters.dataTypes.ParsedResponse;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.Component;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.HashSet;
 import java.util.Set;

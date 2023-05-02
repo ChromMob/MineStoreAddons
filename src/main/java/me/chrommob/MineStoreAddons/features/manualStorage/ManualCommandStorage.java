@@ -12,11 +12,11 @@ import me.chrommob.minestore.common.interfaces.commands.CommandStorageInterface;
 import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.Component;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.format.NamedTextColor;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.minimessage.MiniMessage;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 
 import java.util.*;

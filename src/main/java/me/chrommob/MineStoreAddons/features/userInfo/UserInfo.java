@@ -7,7 +7,7 @@ import me.chrommob.MineStoreAddons.socket.SocketResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
-import net.kyori.adventure.text.Component;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.Component;
 
 import java.util.*;
 

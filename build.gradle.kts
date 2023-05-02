@@ -14,18 +14,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.chrommob:MineStoreRecode:5228624b79")
-    compileOnly("net.kyori:adventure-api:4.12.0")
-    compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
-    compileOnly("net.kyori:adventure-text-serializer-legacy:4.13.0")
-    compileOnly("net.kyori:adventure-text-serializer-plain:4.12.0")
-    compileOnly("co.aikar:acf-paper:0.5.1-SNAPSHOT")
-    compileOnly("co.aikar:acf-bungee:0.5.1-SNAPSHOT")
-    compileOnly("co.aikar:acf-velocity:0.5.1-SNAPSHOT")
-    compileOnly("co.aikar:acf-sponge:0.5.1-SNAPSHOT")
+    compileOnly("com.github.chrommob:MineStoreRecode:master-SNAPSHOT")
 
     implementation("org.yaml:snakeyaml:2.0")
-    implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.google.code.gson:gson:2.8.9")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
@@ -40,11 +32,10 @@ tasks.withType<JavaCompile> {
     targetCompatibility = javaVersion.toString()
 }
 
-tasks.getByName<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
-    relocate("net.kyori", "me.chrommob.minestore.libs.net.kyori")
-    relocate("co.aikar.acf", "me.chrommob.minestore.libs.co.aikar.acf")
-}
-
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }

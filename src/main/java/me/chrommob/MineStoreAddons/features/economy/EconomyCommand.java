@@ -1,9 +1,5 @@
 package me.chrommob.MineStoreAddons.features.economy;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Subcommand;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.features.economy.function.ResponseAwaiter;
@@ -12,7 +8,11 @@ import me.chrommob.MineStoreAddons.features.economy.message.EconomyResponse;
 import me.chrommob.minestore.common.MineStoreCommon;
 import me.chrommob.minestore.common.interfaces.user.AbstractUser;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.chrommob.minestore.libs.co.aikar.commands.BaseCommand;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.CommandAlias;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.CommandPermission;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.Subcommand;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.minimessage.MiniMessage;
 
 @SuppressWarnings("unused")
 @CommandAlias("mse|minestoreeconomy")

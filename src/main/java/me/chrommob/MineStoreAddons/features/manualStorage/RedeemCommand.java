@@ -1,9 +1,5 @@
 package me.chrommob.MineStoreAddons.features.manualStorage;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
 import me.chrommob.MineStoreAddons.MineStoreAddonsMain;
 import me.chrommob.MineStoreAddons.config.ConfigAddonKeys;
 import me.chrommob.MineStoreAddons.features.announcer.AnnouncerResponse;
@@ -12,9 +8,13 @@ import me.chrommob.minestore.common.interfaces.gui.CommonInventory;
 import me.chrommob.minestore.common.interfaces.gui.CommonItem;
 import me.chrommob.minestore.common.interfaces.user.AbstractUser;
 import me.chrommob.minestore.common.interfaces.user.CommonUser;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.chrommob.minestore.libs.co.aikar.commands.BaseCommand;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.CommandAlias;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.CommandPermission;
+import me.chrommob.minestore.libs.co.aikar.commands.annotation.Default;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.Component;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.format.NamedTextColor;
+import me.chrommob.minestore.libs.net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.List;
