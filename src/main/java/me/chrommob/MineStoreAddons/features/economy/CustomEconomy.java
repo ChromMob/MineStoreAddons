@@ -18,6 +18,7 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
     private static CustomEconomy instance;
     private EconomyCommand economyCommand;
     private final Gson gson = new Gson();
+
     public CustomEconomy(MineStoreAddonsMain main) {
         instance = this;
         this.main = main;
@@ -47,6 +48,7 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
 
     private Map<String, Double> balanceCache = new ConcurrentHashMap<>();
     private Map<String, ResponseAwaiter> responseAwaiterMap = new ConcurrentHashMap<>();
+
     @Override
     public double getBalance(CommonUser commonUser) {
         return balanceCache.getOrDefault(commonUser.getName(), 0.0);
@@ -54,7 +56,7 @@ public class CustomEconomy implements PlayerEconomyProvider, SocketResponse {
 
     public void onEnable() {
         economyCommand = new EconomyCommand(this, main);
-        MineStoreCommon.getInstance().commandManager().registerCommand(economyCommand);
+        MineStoreCommon.getInstance().annotationParser().parse(economyCommand);
     }
 
     public void addAwaiter(ResponseAwaiter responseAwaiter) {

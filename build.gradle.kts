@@ -14,20 +14,17 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.chrommob:MineStoreRecode:master-SNAPSHOT")
+    compileOnly("com.github.ChromMob", "MinestoreRecode", "master-SNAPSHOT");
 
     implementation("org.yaml:snakeyaml:2.0")
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
 
 var targetJavaVersion = 8
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    var javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    val javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion.toString()
     targetCompatibility = javaVersion.toString()
 }

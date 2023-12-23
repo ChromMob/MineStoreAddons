@@ -17,6 +17,7 @@ public class UserInfo implements SocketResponse {
     private String guiName;
     private String item;
     private final Gson gs = new Gson();
+
     public UserInfo(MineStoreAddonsMain main) {
         this.main = main;
         init();
@@ -26,7 +27,7 @@ public class UserInfo implements SocketResponse {
         notFound = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_NOT_FOUND);
         guiName = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_GUI_TITLE);
         item = (String) main.getConfigHandler().get(ConfigAddonKeys.USER_INFO_GUI_ITEM);
-        main.getCommon().commandManager().registerCommand(new Command(this));
+        main.getCommon().annotationParser().parse(new Command(this));
     }
 
     public void sendRequest(String sender, String username) {
@@ -45,7 +46,8 @@ public class UserInfo implements SocketResponse {
             return;
         }
         if (infoResponse.getPackageAmount().isEmpty()) {
-            main.getCommon().userGetter().get(infoResponse.getSender()).sendMessage(main.getCommon().miniMessage().deserialize(notFound.replaceAll("%player%", infoResponse.getUsername())));
+            main.getCommon().userGetter().get(infoResponse.getSender()).sendMessage(main.getCommon().miniMessage()
+                    .deserialize(notFound.replaceAll("%player%", infoResponse.getUsername())));
             return;
         }
         List<CommonItem> items = new ArrayList<>();
@@ -56,18 +58,18 @@ public class UserInfo implements SocketResponse {
             lore.add(Component.text("Price: " + infoResponse.getPackagePrice().get(name)));
             items.add(new CommonItem(Component.text(name), item, lore));
         }
-        Component title = main.getCommon().miniMessage().deserialize(guiName.replaceAll("%player%", infoResponse.getUsername()));
+        Component title = main.getCommon().miniMessage()
+                .deserialize(guiName.replaceAll("%player%", infoResponse.getUsername()));
         main.getCommon().guiData().getGuiInfo().addCustomTitle(title);
-        CommonInventory inventory =  new CommonInventory(title, 54, items);
+        CommonInventory inventory = new CommonInventory(title, 54, items);
         main.getCommon().guiData().getGuiInfo().formatInventory(inventory, true);
-        main.getCommon().runOnMainThread(() -> main.getCommon().userGetter().get(infoResponse.getSender()).openInventory(inventory));
+        main.getCommon().runOnMainThread(
+                () -> main.getCommon().userGetter().get(infoResponse.getSender()).openInventory(inventory));
     }
 
-    public HashMap<String, Double> sortByValue(HashMap<String, Double> hm)
-    {
+    public HashMap<String, Double> sortByValue(HashMap<String, Double> hm) {
         // Create a list from elements of HashMap
-        List<Map.Entry<String, Double> > list =
-                new LinkedList<>(hm.entrySet());
+        List<Map.Entry<String, Double>> list = new LinkedList<>(hm.entrySet());
 
         // Sort the list
         Collections.sort(list, Map.Entry.comparingByValue(Comparator.reverseOrder()));

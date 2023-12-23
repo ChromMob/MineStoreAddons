@@ -1,0 +1,42 @@
+[15:22:43] [Server thread/INFO]: [MineStore] Loading addon me.chrommob.MineStoreAddons.MineStoreAddonsMain from MineStoreAddons-1.0-SNAPSHOT-all.jar-out.jar...
+[15:22:43] [Server thread/ERROR]: Error occurred while enabling MineStore v0.1 (Is it up to date?)
+java.lang.BootstrapMethodError: bootstrap method initialization exception
+	at java.lang.invoke.BootstrapMethodInvoker.invoke(BootstrapMethodInvoker.java:188) ~[?:?]
+	at java.lang.invoke.CallSite.makeSite(CallSite.java:315) ~[?:?]
+	at java.lang.invoke.MethodHandleNatives.linkCallSiteImpl(MethodHandleNatives.java:281) ~[?:?]
+	at java.lang.invoke.MethodHandleNatives.linkCallSite(MethodHandleNatives.java:271) ~[?:?]
+	at me.chrommob.MineStoreAddons.config.ConfigHandler.lqaltltxosublldu(ConfigHandler.java) ~[?:?]
+	at me.chrommob.MineStoreAddons.config.ConfigHandler.init(ConfigHandler.java) ~[?:?]
+	at me.chrommob.MineStoreAddons.config.ConfigHandler.<init>(ConfigHandler.java) ~[?:?]
+	at me.chrommob.MineStoreAddons.MineStoreAddonsMain.onLoad(MineStoreAddonsMain.java:34) ~[?:?]
+	at me.chrommob.minestore.common.MineStoreCommon.init(MineStoreCommon.java:160) ~[?:?]
+	at me.chrommob.minestore.platforms.bukkit.MineStoreBukkit.onEnable(MineStoreBukkit.java:62) ~[?:?]
+	at org.bukkit.plugin.java.JavaPlugin.setEnabled(JavaPlugin.java:321) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at org.bukkit.plugin.java.JavaPluginLoader.enablePlugin(JavaPluginLoader.java:332) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at org.bukkit.plugin.SimplePluginManager.enablePlugin(SimplePluginManager.java:454) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at org.bukkit.craftbukkit.v1_8_R3.CraftServer.loadPlugin(CraftServer.java:393) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at org.bukkit.craftbukkit.v1_8_R3.CraftServer.enablePlugins(CraftServer.java:352) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.MinecraftServer.s(MinecraftServer.java:439) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.MinecraftServer.k(MinecraftServer.java:403) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.MinecraftServer.a(MinecraftServer.java:358) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.DedicatedServer.init(DedicatedServer.java:301) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.MinecraftServer.run(MinecraftServer.java:603) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at net.minecraft.server.v1_8_R3.MinecraftServer.lambda$spin$0(MinecraftServer.java:133) ~[patched_1.8.8.jar:git-PandaSpigot-85]
+	at java.lang.Thread.run(Thread.java:833) [?:?]
+Caused by: java.lang.NoSuchMethodException: no such method: org.yaml.snakeyaml.DumperOptions.setDefaultFlowStyle(FlowStyle,int)void/invokeVirtual
+	at java.lang.invoke.MemberName.makeAccessException(MemberName.java:976) ~[?:?]
+	at java.lang.invoke.MemberName$Factory.resolveOrFail(MemberName.java:1117) ~[?:?]
+	at java.lang.invoke.MethodHandles$Lookup.resolveOrFail(MethodHandles.java:3649) ~[?:?]
+	at java.lang.invoke.MethodHandles$Lookup.findVirtual(MethodHandles.java:2680) ~[?:?]
+	at skid.Loader.dispatch(ReferenceDispatcher.java:22) ~[?:?]
+	at java.lang.invoke.BootstrapMethodInvoker.invoke(BootstrapMethodInvoker.java:168) ~[?:?]
+	... 21 more
+Caused by: java.lang.NoSuchMethodError: 'void org.yaml.snakeyaml.DumperOptions.setDefaultFlowStyle(org.yaml.snakeyaml.DumperOptions$FlowStyle, int)'
+	at java.lang.invoke.MethodHandleNatives.resolve(Native Method) ~[?:?]
+	at java.lang.invoke.MemberName$Factory.resolve(MemberName.java:1085) ~[?:?]
+	at java.lang.invoke.MemberName$Factory.resolveOrFail(MemberName.java:1114) ~[?:?]
+	at java.lang.invoke.MethodHandles$Lookup.resolveOrFail(MethodHandles.java:3649) ~[?:?]
+	at java.lang.invoke.MethodHandles$Lookup.findVirtual(MethodHandles.java:2680) ~[?:?]
+	at skid.Loader.dispatch(ReferenceDispatcher.java:22) ~[?:?]
+	at java.lang.invoke.BootstrapMethodInvoker.invoke(BootstrapMethodInvoker.java:168) ~[?:?]
+	... 21 more
